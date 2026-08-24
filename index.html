@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alertas Operativas PNP</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#071016;color:#f5f7f9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:linear-gradient(#071016,#0a1219);padding-bottom:90px}
+header{padding:24px 18px 12px;display:flex;align-items:center;gap:12px}
+.crest{width:54px;height:54px;border-radius:50%;background:#1d2932;display:grid;place-items:center;font-size:28px}
+h1{font-size:18px;line-height:1.1;margin:0}.sub{color:#92a0aa;font-size:12px;margin-top:4px}.online{margin-left:auto;color:#48e26d;font-size:12px;font-weight:800}
+.card{margin:10px 16px;background:#101b23;border:1px solid #273641;border-radius:16px;padding:16px}
+.profile{display:flex;gap:12px;align-items:center}.avatar{width:58px;height:58px;border-radius:50%;background:#25323c;display:grid;place-items:center;font-size:28px}.small{font-size:12px;color:#98a7b2}.ok{color:#45e56b;font-weight:800}
+.alert-banner{border:1px solid #8e2025;background:linear-gradient(110deg,#260e12,#170d10);color:#fff;padding:17px;border-radius:16px;display:flex;justify-content:space-between;align-items:center}.alert-banner b{color:#ff4d54}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 16px}.tile{min-height:105px;background:#101b23;border:1px solid #273641;border-radius:15px;padding:16px;cursor:pointer}.tile:active{transform:scale(.98)}.ico{font-size:27px;margin-bottom:9px}.tile b{font-size:14px}.tile span{display:block;color:#9aa8b3;font-size:11px;margin-top:5px}
+.sos-wrap{margin:18px 16px 8px;background:#101b23;border:1px solid #273641;border-radius:18px;padding:18px;text-align:center}.sos{width:132px;height:132px;border-radius:50%;border:5px solid #6e161b;background:#df252c;color:white;font-weight:900;font-size:30px;box-shadow:0 0 0 9px #251114;cursor:pointer}.sos small{display:block;font-size:12px}.hint{font-size:11px;color:#9aa8b3;margin-top:14px}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);height:76px;background:#0b151c;border-top:1px solid #293640;display:flex;justify-content:space-around;align-items:center}.navbtn{background:none;border:0;color:#8f9ba4;font-size:11px;cursor:pointer}.navbtn.active{color:#42df63}.navico{display:block;font-size:21px;margin-bottom:3px}
+.screen{display:none}.screen.active{display:block}.back{background:none;border:0;color:white;font-size:22px;cursor:pointer}.title{display:flex;align-items:center;gap:10px;margin:0 16px 12px}
+form{margin:0 16px}.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;background:#0d171e;color:white;border:1px solid #33434f;border-radius:11px;padding:12px;font:inherit}.field textarea{min-height:90px;resize:vertical}.primary,.secondary{width:100%;border:0;border-radius:12px;padding:14px;font-weight:900;cursor:pointer}.primary{background:#df252c;color:#fff}.secondary{background:#26333d;color:#fff;margin-top:8px}
+.alert-item{border-left:5px solid #df252c;background:#101b23;border-radius:12px;padding:14px;margin:10px 16px}.tag{font-size:11px;font-weight:900;color:#ff6268}.alert-item p{font-size:13px;color:#d8dfe3;line-height:1.4}.meta{font-size:11px;color:#8f9da7}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#17331f;color:#75f08e;padding:12px 16px;border-radius:12px;font-weight:800;display:none;z-index:5;box-shadow:0 5px 25px #0008}
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#071016">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Alertas PNP">
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="crest">🇵🇪</div>
+  <div><h1>POLICÍA NACIONAL<br>DEL PERÚ</h1><div class="sub">SISTEMA DE ALERTAS OPERATIVAS</div></div>
+  <div class="online">● EN LÍNEA</div>
+</header>
+
+<section id="home" class="screen active">
+  <div class="card profile"><div class="avatar">👮</div><div><b>SO3 PNP JUAN PÉREZ</b><div class="small">Patrullaje Motorizado</div><div class="ok">● DISPONIBLE</div></div></div>
+  <div class="card alert-banner"><div><b>🚨 ALERTAS ACTIVAS</b><div style="font-size:24px;font-weight:900">3 <span style="font-size:13px;font-weight:500">alertas en curso</span></div></div><button class="secondary" style="width:auto;margin:0;padding:9px 12px" onclick="openScreen('alerts')">VER</button></div>
+  <div class="grid">
+    <div class="tile" onclick="openScreen('new')"><div class="ico">🚨</div><b>NUEVA ALERTA</b><span>Crear alerta operativa</span></div>
+    <div class="tile" onclick="openScreen('map')"><div class="ico">🗺️</div><b>MAPA OPERATIVO</b><span>Alertas y unidades</span></div>
+    <div class="tile" onclick="openScreen('units')"><div class="ico">👥</div><b>UNIDADES</b><span>Personal disponible</span></div>
+    <div class="tile" onclick="showToast('Chat operativo: módulo de prototipo')"><div class="ico">💬</div><b>CHAT OPERATIVO</b><span>Comunicación interna</span></div>
+    <div class="tile" onclick="openScreen('history')"><div class="ico">📋</div><b>HISTORIAL</b><span>Alertas anteriores</span></div>
+    <div class="tile" onclick="showToast('Ajustes: módulo de prototipo')"><div class="ico">⚙️</div><b>AJUSTES</b><span>Configuración</span></div>
+  </div>
+  <div class="sos-wrap"><button class="sos" id="sosBtn">SOS<small>PÁNICO</small></button><div class="hint">Mantén presionado 2 segundos para iniciar una emergencia de efectivo.</div></div>
+</section>
+
+<section id="new" class="screen">
+  <div class="title"><button class="back" onclick="openScreen('home')">‹</button><h2>Nueva alerta</h2></div>
+  <form id="alertForm">
+    <div class="field"><label>TIPO DE EMERGENCIA</label><select id="type"><option>Robo en progreso</option><option>Asalto</option><option>Persona sospechosa</option><option>Vehículo sospechoso</option><option>Accidente</option><option>Agresión</option></select></div>
+    <div class="field"><label>DIRECCIÓN / REFERENCIA</label><input id="loc" value="Calle San Martín, cerca al Hotel Las Palmeras"></div>
+    <div class="field"><label>DESCRIPCIÓN</label><textarea id="desc">4 personas sospechosas. Una viste polo plomo y zapatillas blancas. Se desplazan con dirección al norte.</textarea></div>
+    <div class="field"><label>FOTOGRAFÍA (OPCIONAL)</label><input type="file" accept="image/*"></div>
+    <div class="field"><label>PRIORIDAD</label><select id="priority"><option>CRÍTICA</option><option>ALTA</option><option>MEDIA</option><option>BAJA</option></select></div>
+    <button class="primary">🚨 EMITIR ALERTA</button>
+    <button type="button" class="secondary" onclick="openScreen('home')">Cancelar</button>
+  </form>
+</section>
+
+<section id="alerts" class="screen">
+  <div class="title"><button class="back" onclick="openScreen('home')">‹</button><h2>Alertas activas</h2></div>
+  <div id="alertList"></div>
+</section>
+
+<section id="map" class="screen">
+  <div class="title"><button class="back" onclick="openScreen('home')">‹</button><h2>Mapa operativo</h2></div>
+  <div class="card" style="height:390px;display:grid;place-items:center;text-align:center;background:radial-gradient(circle,#1c303c,#0c151c)"><div><div style="font-size:65px">🗺️</div><b>MAPA OPERATIVO</b><div class="small">En la versión conectada se mostrará el mapa GPS, alertas y unidades cercanas.</div><div style="margin-top:18px;color:#ff5258">🔴 Alerta crítica · Calle San Martín</div><div style="margin-top:8px;color:#4be36b">🟢 Patrulla M-105 · 0.6 km</div></div></div>
+</section>
+
+<section id="units" class="screen">
+  <div class="title"><button class="back" onclick="openScreen('home')">‹</button><h2>Unidades</h2></div>
+  <div class="card"><b>🟢 Patrulla M-105</b><div class="small">Disponible · 0.6 km</div></div>
+  <div class="card"><b>🟢 Patrulla M-120</b><div class="small">Disponible · 1.2 km</div></div>
+  <div class="card"><b>🟡 Patrulla M-110</b><div class="small">Atendiendo incidencia · 1.8 km</div></div>
+</section>
+
+<section id="history" class="screen">
+  <div class="title"><button class="back" onclick="openScreen('home')">‹</button><h2>Historial</h2></div>
+  <div class="card"><b>#A-000244 · Persona sospechosa</b><div class="small">22/08/2026 · Atendida · Cerrada</div></div>
+  <div class="card"><b>#A-000243 · Accidente</b><div class="small">22/08/2026 · Atendida · Cerrada</div></div>
+</section>
+
+<nav>
+  <button class="navbtn active" onclick="openScreen('home')"><span class="navico">⌂</span>Inicio</button>
+  <button class="navbtn" onclick="openScreen('alerts')"><span class="navico">🔔</span>Alertas</button>
+  <button class="navbtn" onclick="openScreen('map')"><span class="navico">🗺️</span>Mapa</button>
+  <button class="navbtn" onclick="openScreen('units')"><span class="navico">🚓</span>Unidades</button>
+  <button class="navbtn" onclick="showToast('Perfil: módulo de prototipo')"><span class="navico">👤</span>Perfil</button>
+</nav>
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const STORAGE_KEY='alertas_pnp_demo_v2';
+
+function getAlerts(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}
+}
+function saveAlerts(a){localStorage.setItem(STORAGE_KEY,JSON.stringify(a))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function openScreen(id){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='alerts') renderAlerts();
+  updateCount();
+  window.scrollTo(0,0);
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  if(t){t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+}
+function icon(p){return p==='CRÍTICA'?'🔴':p==='ALTA'?'🟠':p==='MEDIA'?'🟡':'🟢'}
+function nextButton(a){
+  if(a.status==='NUEVA') return `<button class="secondary" onclick="setStatus('${a.id}','RECIBIDA')">🔔 RECIBIR</button>`;
+  if(a.status==='RECIBIDA') return `<button class="secondary" onclick="setStatus('${a.id}','EN CAMINO')">🚓 EN CAMINO</button>`;
+  if(a.status==='EN CAMINO') return `<button class="secondary" onclick="setStatus('${a.id}','ATENDIENDO')">👮 ATENDIENDO</button>`;
+  if(a.status==='ATENDIENDO') return `<button class="secondary" onclick="setStatus('${a.id}','CERRADA')">✅ CERRAR</button>`;
+  return '';
+}
+function renderAlerts(){
+  const box=document.getElementById('alertList');
+  const alerts=getAlerts();
+  if(!alerts.length){
+    box.innerHTML='<div class="card"><b>No hay alertas de prueba.</b><div class="small">Crea una desde “Nueva alerta”.</div></div>';
+    return;
+  }
+  box.innerHTML=alerts.map(a=>`
+    <div class="alert-item">
+      <div class="tag">${icon(a.priority)} ${esc(a.priority)} · ${esc(a.type).toUpperCase()}</div>
+      <p>📍 ${esc(a.loc)}<br>${esc(a.desc)}</p>
+      <div class="meta">ID #${esc(a.id)} · Emitida ${new Date(a.createdAt).toLocaleString('es-PE')} · Estado: <b>${esc(a.status)}</b></div>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        ${nextButton(a)}
+        ${a.status!=='CERRADA'?`<button class="secondary" onclick="requestBackup('${a.id}')">🆘 REFUERZO</button>`:''}
+        <button class="secondary" onclick="deleteAlert('${a.id}')">Eliminar prueba</button>
+      </div>
+    </div>`).join('');
+}
+function updateCount(){
+  const n=getAlerts().filter(a=>a.status!=='CERRADA').length;
+  const b=document.querySelector('.alert-banner');
+  if(b){
+    const target=b.querySelector('div div');
+    if(target) target.innerHTML=`${n} <span style="font-size:13px;font-weight:500">alertas en curso</span>`;
+  }
+}
+function setStatus(id,status){
+  const a=getAlerts(); const x=a.find(v=>v.id===id);
+  if(x){x.status=status;x.updatedAt=new Date().toISOString();saveAlerts(a);renderAlerts();updateCount();toast('Estado: '+status)}
+}
+function requestBackup(id){
+  const a=getAlerts(); const x=a.find(v=>v.id===id);
+  if(x){x.backupRequested=true;x.updatedAt=new Date().toISOString();saveAlerts(a);renderAlerts();toast('Solicitud de refuerzo registrada — PRUEBA')}
+}
+function deleteAlert(id){
+  saveAlerts(getAlerts().filter(x=>x.id!==id));renderAlerts();updateCount();toast('Alerta de prueba eliminada');
+}
+const form=document.getElementById('alertForm');
+if(form) form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const a={
+    id:'A-'+String(Date.now()).slice(-6),
+    type:document.getElementById('type').value,
+    loc:document.getElementById('loc').value,
+    desc:document.getElementById('desc').value,
+    priority:document.getElementById('priority').value,
+    status:'NUEVA',
+    createdAt:new Date().toISOString()
+  };
+  const list=getAlerts();list.unshift(a);saveAlerts(list);
+  toast('Alerta guardada en este dispositivo — PRUEBA');
+  form.reset();openScreen('alerts');
+});
+renderAlerts();updateCount();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script></body>
+</html>
